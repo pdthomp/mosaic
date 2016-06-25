@@ -1,1 +1,7 @@
 index.php
+.DS_Store
+composer.lock
+vendor/
+input/
+output/
+crayons/
