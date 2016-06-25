@@ -1,0 +1,12 @@
+{
+    "name": "vendor/name",
+    "authors": [
+        {
+            "name": "Philip Thompson",
+            "email": "phil@designzillas.com"
+        }
+    ],
+    "require": {
+        "raveren/kint": "^1.0"
+    }
+}
