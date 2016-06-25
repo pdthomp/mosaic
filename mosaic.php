@@ -5,12 +5,14 @@ $start = microtime(true);
 require __DIR__.'/vendor/autoload.php';
 include('crayons.php');
 
-$crayons = $crayons2;
+// $crayons = $crayons2;
 $segmentWidth = 10;
 $segmentHeight = 50;
 $widthMarker = 0;
 $image = new Imagick;
 $image->newImage( count($crayons) * $segmentWidth, $segmentHeight, new ImagickPixel('black') );
+
+usort($crayons, "calculateLuminosity");
 
 foreach ($crayons as $key => $value) {
   $color = "rgb($value[0], $value[1], $value[2])";
@@ -26,23 +28,24 @@ $image->setImageFormat ("png");
 $image->writeImage ("output/color_sort.png");
 
 
+function calculateLuminosity( &$a, $b ){
+  $aDistance = calculateDistanceFromBlack($a);
+  $bDistance = calculateDistanceFromBlack($b);
 
-
-function calculateClosestColor( $color, $crayons, &$distancesC ) {
-  $distances = [];
-
-  foreach ($crayons as $key => $crayon) {
-    $distance = pow( $color[0] - $crayon[0], 2 )+pow( $color[1] - $crayon[1], 2 )+pow( $color[2] - $crayon[2], 2 );
-    $distances[ $crayon[3] ] = $distance;
+  if ( $aDistance > $bDistance ){
+    return 1;
+  } else if ( $aDistance < $bDistance ){
+    return -1;
+  } else if ( $aDistance == $bDistance ){
+    return 0;
   }
+}
 
-  asort($distances);
+d($crayons);
 
-  d($distances);
-
-  $crayon = array_keys($distances, min($distances));
-
-  return $crayon[0];
+function calculateDistanceFromBlack( $color ) {
+  $distance = pow( $color[0] - 0, 2 )+pow( $color[1] - 0, 2 )+pow( $color[2] - 0, 2 );
+  return $distance;
 }
 
 $endTime = microtime(true) - $start;
