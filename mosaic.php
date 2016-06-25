@@ -1,38 +1,30 @@
+<img src='output/color_sort.png' style='width:100%;'>
 <?php
-
-echo "<img src='output/color_sort.png' style='width:100%;'>";
+$start = microtime(true);
 
 require __DIR__.'/vendor/autoload.php';
 include('crayons.php');
 
-$crayon = $crayons2;
-
-
-d(count($crayons));
-
-
+$crayons = $crayons2;
+$segmentWidth = 10;
+$segmentHeight = 50;
+$widthMarker = 0;
 $image = new Imagick;
-$image->newImage( count($crayons) * 10, 50, new ImagickPixel('gray') );
+$image->newImage( count($crayons) * $segmentWidth, $segmentHeight, new ImagickPixel('black') );
+
+foreach ($crayons as $key => $value) {
+  $color = "rgb($value[0], $value[1], $value[2])";
+  $segmentImage = new Imagick;
+  $segmentImage->newImage( $segmentWidth, $segmentHeight, new ImagickPixel($color) );
+  $segmentImage->setImageFormat('png');
+
+  $image->compositeImage( $segmentImage, Imagick::COMPOSITE_DEFAULT, $widthMarker, 0);
+  $widthMarker += $segmentWidth;
+}
+
 $image->setImageFormat ("png");
 $image->writeImage ("output/color_sort.png");
 
-
-$mosaicImage->compositeImage( $$crayonColor, Imagick::COMPOSITE_DEFAULT, 10, 50);
-$widthMarker += $maskImageWidth;
-
-
-
-foreach ($crayons as $key => $value) {
-	// d($key);
-
-
-}
-
-
-$start = microtime(true);
-$endTime = microtime(true) - $start;
-
-// d($endTime);
 
 
 
@@ -52,3 +44,6 @@ function calculateClosestColor( $color, $crayons, &$distancesC ) {
 
   return $crayon[0];
 }
+
+$endTime = microtime(true) - $start;
+d($endTime);
