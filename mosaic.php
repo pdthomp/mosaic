@@ -1,5 +1,7 @@
 <img src='output/color_sort.png' style='width:100%;'>
 <?php
+session_start();
+
 $start = microtime(true);
 
 require __DIR__.'/vendor/autoload.php';
@@ -11,6 +13,7 @@ $segmentHeight = 50;
 $widthMarker = 0;
 $image = new Imagick;
 $image->newImage( count($crayons) * $segmentWidth, $segmentHeight, new ImagickPixel('black') );
+$_SESSION['sortCount'] = 0;
 
 usort($crayons, "calculateLuminosity");
 
@@ -31,6 +34,8 @@ $image->writeImage ("output/color_sort.png");
 function calculateLuminosity( &$a, $b ){
   $aDistance = calculateDistanceFromBlack($a);
   $bDistance = calculateDistanceFromBlack($b);
+  
+  $_SESSION['sortCount']++;
 
   if ( $aDistance > $bDistance ){
     return 1;
@@ -40,6 +45,7 @@ function calculateLuminosity( &$a, $b ){
     return 0;
   }
 }
+d($_SESSION['sortCount']);
 
 d($crayons);
 
